@@ -15,13 +15,6 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
   },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
   cardGrid: {
     paddingTop: theme.spacing(11),
     paddingBottom: theme.spacing(8),
@@ -35,15 +28,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     borderRadius: "10px",
   },
-  cardMedia: {
-    paddingTop: "56.25%", // 16:9
-  },
   cardContent: {
     flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
   },
   headerPaper: {
     color: "#000",
@@ -67,11 +53,17 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "underline",
     },
   },
+  headingFontStyle: {
+    color: "#202124",
+    fontWeight: 500,
+    fontFamily: "sans-serif",
+    fontSize: "1.75rem",
+  }
 }));
 
-export default function Album(props) {
+export default function NewsContents(props) {
   const classes = useStyles();
-  const { articlesList } = props;
+  const { articlesList, isDataFetching } = props;
 
   function formatDate(value) {
     var d = new Date(value),
@@ -102,45 +94,50 @@ export default function Album(props) {
               <LineStyleIcon className={classes.headerIconStyle} />
             </Grid>
             <Grid item>
-              <Typography
-                style={{
-                  color: "#202124",
-                  fontWeight: 500,
-                  fontFamily: "sans-serif",
-                  fontSize: "1.75rem",
-                }}
+              <Typography className={classes.headingFontStyle}
               >
                 TOP HEADLINES
               </Typography>
             </Grid>
           </Grid>
         </Container>
-        <Container className={classes.secCardGrid} maxWidth="md">
-          <Grid container spacing={4}>
-            {articlesList.map((article, index) => (
-              <Grid item key={index} xs={12} sm={6} md={12}>
-                <Card className={classes.card} variant="outlined">
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      <a
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={classes.linkStyle}
-                      >
-                        {article.title}
-                      </a>
-                    </Typography>
-                    <Typography>{article.description}</Typography>
-                    <Typography className={classes.publishStyle}>
-                      Published At : {formatDate(article.publishedAt)}
-                    </Typography>
-                  </CardContent>
-                </Card>
+        {isDataFetching === '' && articlesList.length > 0 ? (
+          <Container className={classes.secCardGrid} maxWidth="md">
+            <Grid container spacing={4}>
+              {articlesList.map((article, index) => (
+                <Grid item key={index} xs={12} sm={6} md={12}>
+                  <Card className={classes.card} variant="outlined">
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        <a
+                          href={article.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={classes.linkStyle}
+                        >
+                          {article.title}
+                        </a>
+                      </Typography>
+                      <Typography>{article.description}</Typography>
+                      <Typography className={classes.publishStyle}>
+                        Published At : {formatDate(article.publishedAt)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        ) : (
+            <Grid container spacing={4} direction="row" alignItems="center" justify="center">
+              <Grid item>
+                <Typography className={classes.headingFontStyle}
+                >
+                  {isDataFetching}
+                </Typography>
               </Grid>
-            ))}
-          </Grid>
-        </Container>
+            </Grid>
+          )}
       </main>
     </React.Fragment>
   );
